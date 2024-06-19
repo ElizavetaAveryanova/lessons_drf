@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from materials.models import Course, Lesson
 
@@ -40,8 +41,7 @@ class User(AbstractUser):
 
 class Payments(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="payment", **NULLABLE
-    )
+        User, on_delete=models.CASCADE, related_name="payment",)
     paid_course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
@@ -57,12 +57,22 @@ class Payments(models.Model):
         **NULLABLE,
     )
 
-    data = models.DateField(auto_now_add=True, verbose_name="Дата оплаты", **NULLABLE)
+    data = models.DateTimeField(auto_now_add=True, verbose_name="Дата оплаты")
     payment_count = models.PositiveIntegerField(verbose_name="Сумма оплаты")
     payment_method = models.CharField(max_length=50, verbose_name="Метод оплаты")
 
     def __str__(self):
         return f"{self.user} - {self.paid_course if self.paid_course else self.paid_lesson}"
+
+    def clean(self):
+        if self.paid_course is None and self.paid_lesson is None:
+            raise ValidationError("Должен быть указан либо курс, либо урок.")
+        if self.paid_course is not None and self.paid_lesson is not None:
+            raise ValidationError("Нельзя указывать одновременно курс и урок.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "оплата"
