@@ -6,8 +6,7 @@ from users.views import (
     UserListAPIView,
     UserRetrieveAPIView,
     UserUpdateAPIView,
-    UserDestroyAPIView, PaymentCreateAPIView, PaymentListAPIView, PaymentRetrieveAPIView, PaymentUpdateAPIView,
-    PaymentDestroyAPIView,
+    UserDestroyAPIView, PaymentCreateAPIView, PaymentListAPIView, PaymentRetrieveAPIView
 )
 
 app_name = UsersConfig.name
@@ -23,8 +22,8 @@ urlpatterns = [
     path("payment/create/", PaymentCreateAPIView.as_view(), name="payment_create"),
     path("payment/", PaymentListAPIView.as_view(), name="payment_list"),
     path("payment/<int:pk>/", PaymentRetrieveAPIView.as_view(), name="payment_detail"),
-    path("payment/update/<int:pk>/", PaymentUpdateAPIView.as_view(), name="payment_update"),
-    path(
-        "payment/delete/<int:pk>/", PaymentDestroyAPIView.as_view(), name="payment_delete"
-    ),
+    # path("payment/update/<int:pk>/", PaymentUpdateAPIView.as_view(), name="payment_update"),
+    # path(
+    #     "payment/delete/<int:pk>/", PaymentDestroyAPIView.as_view(), name="payment_delete"
+    # ),
 ]

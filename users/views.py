@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
@@ -29,7 +30,7 @@ class UserDestroyAPIView(generics.DestroyAPIView):
     queryset = User.objects.all()
 
 
-class PaymentsListCreateAPIView(generics.ListCreateAPIView):
+class PaymentListAPIView(generics.ListCreateAPIView):
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
 
@@ -43,7 +44,13 @@ class PaymentsListCreateAPIView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class PaymentsRetrieveAPIView(generics.RetrieveAPIView):
+
+class PaymentCreateAPIView(CreateAPIView):
+    """Контроллер создания платежа"""
+    serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated]
+
+class PaymentRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
 
