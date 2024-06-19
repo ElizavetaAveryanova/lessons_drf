@@ -1,6 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
-
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 from users.models import User, Payments
 from users.serializers import UserSerializer, PaymentSerializer
 
@@ -31,6 +32,10 @@ class UserDestroyAPIView(generics.DestroyAPIView):
 class PaymentsListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
+
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_fields = ('payment_method', 'paid_course', 'paid_lesson',)
+    ordering_fields = ('data',)
 
     def get_queryset(self):
         return Payments.objects.filter(user=self.request.user)
