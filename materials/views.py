@@ -20,6 +20,12 @@ class CourseViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
 
 
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(owner=self.request.user.pk)
+        return queryset
+
+
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, ~IsModer,)
