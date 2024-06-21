@@ -36,6 +36,11 @@ class LessonListAPIView(generics.ListAPIView):
     queryset = Lesson.objects.all()
     permission_classes = (IsAuthenticated,)
 
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(owner=self.request.user.pk)
+        return queryset
+
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = LessonSerializer
