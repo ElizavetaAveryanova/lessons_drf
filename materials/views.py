@@ -19,6 +19,15 @@ class CourseViewSet(viewsets.ModelViewSet):
             self.permission_classes = (IsAuthenticated, ~IsModer | IsOwner,)
         return super().get_permissions()
 
+    def perform_create(self, serializer):
+        """
+        Метод получения владельца курса
+        :param serializer: на вход получаем сериализатор
+        """
+        course = serializer.save()
+        course.owner = self.request.user
+        course.save()
+
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset()
@@ -29,6 +38,14 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, ~IsModer,)
+
+    def perform_create(self, serializer):
+        """
+        Метод получения владельца урока
+        :param serializer: на вход получаем сериализатор
+        """
+        lesson = serializer.save(owner=self.request.user)
+        lesson.save()
 
 
 class LessonListAPIView(generics.ListAPIView):
