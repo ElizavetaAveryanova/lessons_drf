@@ -16,11 +16,11 @@ class LessonSerializer(ModelSerializer):
 
 class CourseSerializer(ModelSerializer):
     lessons_count = SerializerMethodField()
-    lessons_list = LessonSerializer(source='lessons', many=True)
+    lessons_list = LessonSerializer(source='lessons', many=True, read_only = True)
 
     @staticmethod
     def get_lessons_count(obj: Course) -> int:
-        return obj.lessons.count()
+        return Lesson.objects.filter(course=obj).count()
 
     class Meta:
         model = Course
