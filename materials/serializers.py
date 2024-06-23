@@ -1,9 +1,10 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
-
+from rest_framework.serializers import SerializerMethodField
+from rest_framework import serializers
 from materials.models import Course, Lesson
+from materials.validators import LinkValidator
 
 
-class LessonSerializer(ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = (
@@ -12,10 +13,12 @@ class LessonSerializer(ModelSerializer):
             "title",
             "description",
             "owner",
+            "video_link",
         )
+        validators = [LinkValidator(field='video_link')]
 
 
-class CourseSerializer(ModelSerializer):
+class CourseSerializer(serializers.ModelSerializer):
     lessons_count = SerializerMethodField()
     lessons_list = LessonSerializer(source='lessons', many=True, read_only = True)
 
