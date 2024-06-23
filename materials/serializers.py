@@ -15,12 +15,18 @@ class LessonSerializer(serializers.ModelSerializer):
             "owner",
             "video_link",
         )
-        validators = [LinkValidator(field='video_link')]
+        validators = [LinkValidator(field="video_link")]
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    lessons_count = SerializerMethodField()
-    lessons_list = LessonSerializer(source='lessons', many=True, read_only = True)
+    lessons_count = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField()
+    lessons_list = LessonSerializer(source="lessons", many=True, read_only=True)
+
+    def get_is_subscribed(self, obj):
+        return Subscription.objects.filter(
+            user=self.context["request"].user, course=obj
+        ).exists()
 
     @staticmethod
     def get_lessons_count(obj: Course) -> int:
@@ -35,4 +41,5 @@ class CourseSerializer(serializers.ModelSerializer):
             "lessons_count",
             "lessons_list",
             "owner",
+            "is_subscribed",
         )

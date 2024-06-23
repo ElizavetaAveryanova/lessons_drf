@@ -15,9 +15,7 @@ class Command(BaseCommand):
 
         if course_id is not None:
             lesson = Lesson.objects.create(
-                course_id=course_id,
-                title=lesson_title,
-                description=lesson_description
+                course_id=course_id, title=lesson_title, description=lesson_description
             )
             print("Урок успешно создан.")
             lesson.save()

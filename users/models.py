@@ -6,6 +6,7 @@ from materials.models import Course, Lesson
 
 NULLABLE = {"blank": True, "null": True}
 
+
 class User(AbstractUser):
     username = None
 
@@ -39,9 +40,13 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+
 class Payments(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="payment",)
+        User,
+        on_delete=models.CASCADE,
+        related_name="payment",
+    )
     paid_course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,

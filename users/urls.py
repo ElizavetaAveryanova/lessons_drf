@@ -6,7 +6,10 @@ from users.views import (
     UserListAPIView,
     UserRetrieveAPIView,
     UserUpdateAPIView,
-    UserDestroyAPIView, PaymentCreateAPIView, PaymentListAPIView, PaymentRetrieveAPIView
+    UserDestroyAPIView,
+    PaymentCreateAPIView,
+    PaymentListAPIView,
+    PaymentRetrieveAPIView,
 )
 
 from rest_framework.permissions import AllowAny
@@ -29,7 +32,15 @@ urlpatterns = [
     # path(
     #     "payment/delete/<int:pk>/", PaymentDestroyAPIView.as_view(), name="payment_delete"
     # ),
-# token
-    path("users/login/", TokenObtainPairView.as_view(permission_classes=(AllowAny,)), name="login",),
-    path("users/token/refresh/", TokenRefreshView.as_view(permission_classes=(AllowAny,)), name="token_refresh",),
+    # token
+    path(
+        "users/login/",
+        TokenObtainPairView.as_view(permission_classes=(AllowAny,)),
+        name="login",
+    ),
+    path(
+        "users/token/refresh/",
+        TokenRefreshView.as_view(permission_classes=(AllowAny,)),
+        name="token_refresh",
+    ),
 ]

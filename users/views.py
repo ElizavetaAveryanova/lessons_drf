@@ -17,6 +17,7 @@ class UserCreateAPIView(generics.CreateAPIView):
         user.set_password(user.password)
         user.save()
 
+
 class UserListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -42,8 +43,12 @@ class PaymentListAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ('payment_method', 'paid_course', 'paid_lesson',)
-    ordering_fields = ('data',)
+    filterset_fields = (
+        "payment_method",
+        "paid_course",
+        "paid_lesson",
+    )
+    ordering_fields = ("data",)
 
     def get_queryset(self):
         return Payments.objects.filter(user=self.request.user)
@@ -54,8 +59,10 @@ class PaymentListAPIView(generics.ListCreateAPIView):
 
 class PaymentCreateAPIView(CreateAPIView):
     """Контроллер создания платежа"""
+
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
+
 
 class PaymentRetrieveAPIView(generics.RetrieveAPIView):
     serializer_class = PaymentSerializer
