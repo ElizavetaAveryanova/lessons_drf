@@ -4,8 +4,11 @@ from rest_framework.serializers import ValidationError
 
 
 class LinkValidator:
-    """Валидация ссылки на материалы (только youtube)"""
-
+    """
+    Проверка ссылки на видео
+    :param value: вводимая ссылка
+    :raise ValidationError: Выводит ошибку, если ссылка не соответствует требованиям
+    """
     def __init__(self, field):
         self.field = field
 

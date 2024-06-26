@@ -11,13 +11,16 @@ from users.models import User
 
 class LessonTestCase(APITestCase):
     def setUp(self):
-        self.user = User.objects.create(email='testuser@example.com', password='testpass')
-        self.course = Course.objects.create(title='Test Course')
-        self.lesson = self.course.lessons.create(title="test_lesson",
-                                                 video_link="https://www.youtube.com/watch?v=2T83JhAeC6U&list=PLA0M1Bcd0w8zPwP7t-FgwONhZOHt9rz9E&index=34",
-                                                 owner=self.user)
+        self.user = User.objects.create(
+            email="testuser@example.com", password="testpass"
+        )
+        self.course = Course.objects.create(title="Test Course")
+        self.lesson = self.course.lessons.create(
+            title="test_lesson",
+            video_link="https://www.youtube.com/watch?v=2T83JhAeC6U&list=PLA0M1Bcd0w8zPwP7t-FgwONhZOHt9rz9E&index=34",
+            owner=self.user,
+        )
         self.client.force_authenticate(user=self.user)
-
 
     def test_lesson_retrieve(self):
         url = reverse("materials:lesson_detail", args=(self.lesson.pk,))
@@ -43,7 +46,9 @@ class LessonTestCase(APITestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Lesson.objects.count(), 2)  # 2 because we created one in setUp()
+        self.assertEqual(
+            Lesson.objects.count(), 2
+        )  # 2 because we created one in setUp()
         self.assertEqual(Lesson.objects.last().title, "Test Lesson")
         self.assertEqual(Lesson.objects.last().video_link, data["video_link"])
 
@@ -59,8 +64,10 @@ class LessonTestCase(APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("non_field_errors", response.data)
-        self.assertIn("Допустимо добавлять ссылки на материалы, размещенные только на youtube",
-                      response.data["non_field_errors"][0])
+        self.assertIn(
+            "Допустимо добавлять ссылки на материалы, размещенные только на youtube",
+            response.data["non_field_errors"][0],
+        )
         self.assertEqual(Lesson.objects.count(), 1)
 
     def test_lesson_update(self):
@@ -72,12 +79,11 @@ class LessonTestCase(APITestCase):
             "owner": self.user.pk,
         }
         self.client.force_authenticate(user=self.user)
-        response = self.client.put(url, data, format='json')
+        response = self.client.put(url, data, format="json")
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data.get("title"), "test_lesson_3")
         self.assertEqual(Lesson.objects.get(pk=self.lesson.pk).title, "test_lesson_3")
-
 
     def test_lesson_delete(self):
         url = reverse("materials:lesson_delete", args=(self.lesson.pk,))
@@ -104,14 +110,19 @@ class LessonTestCase(APITestCase):
         self.assertEqual(data["results"][0]["course"], self.course.pk)
         self.assertEqual(data["results"][0]["title"], "test_lesson")
         self.assertEqual(data["results"][0]["description"], None)
-        self.assertEqual(data["results"][0]["video_link"], "https://www.youtube.com/watch?v=2T83JhAeC6U&list=PLA0M1Bcd0w8zPwP7t-FgwONhZOHt9rz9E&index=34")
+        self.assertEqual(
+            data["results"][0]["video_link"],
+            "https://www.youtube.com/watch?v=2T83JhAeC6U&list=PLA0M1Bcd0w8zPwP7t-FgwONhZOHt9rz9E&index=34",
+        )
         self.assertEqual(data["results"][0]["owner"], self.user.pk)
 
 
 class SubscriptionTestCase(APITestCase):
 
     def setUp(self):
-        self.user = User.objects.create(email='testuser@example.com', password='testpass')
+        self.user = User.objects.create(
+            email="testuser@example.com", password="testpass"
+        )
         self.course = Course.objects.create(title="Test Course")
         self.lesson = self.course.lessons.create(title="test_lesson", owner=self.user)
         self.client = APIClient()

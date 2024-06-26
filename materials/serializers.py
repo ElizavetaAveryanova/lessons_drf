@@ -1,10 +1,12 @@
-from rest_framework.serializers import SerializerMethodField
 from rest_framework import serializers
 from materials.models import Course, Lesson, Subscription
 from materials.validators import LinkValidator
 
 
 class LessonSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для урока
+    """
     class Meta:
         model = Lesson
         fields = (
@@ -19,6 +21,9 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для курса
+    """
     lessons_count = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
     lessons_list = LessonSerializer(source="lessons", many=True, read_only=True)

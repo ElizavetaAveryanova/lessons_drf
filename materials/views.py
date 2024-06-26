@@ -10,11 +10,19 @@ from users.permissions import IsModer, IsOwner
 
 
 class CourseViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet для курса
+    """
+
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     pagination_class = CustomPagination
 
     def get_permissions(self):
+        """
+        Метод получения разрешений
+        :return: возвращает список разрешений
+        """
         if self.action == "create":
             self.permission_classes = (
                 IsAuthenticated,
@@ -48,6 +56,9 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
+    """
+    Контроллер создания урока
+    """
     serializer_class = LessonSerializer
     permission_classes = (
         IsAuthenticated,
@@ -64,18 +75,27 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 
 class LessonListAPIView(generics.ListAPIView):
+    """
+    Контроллер получения списка уроков
+    """
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = (IsAuthenticated,)
     pagination_class = CustomPagination
 
     def get_queryset(self, *args, **kwargs):
+        """
+        Метод получения уроков с фильтрацией по владельцу
+        """
         queryset = super().get_queryset()
         queryset = queryset.filter(owner=self.request.user.pk)
         return queryset
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
+    """
+    Контроллер просмотра конкретного урока
+    """
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = (
@@ -85,6 +105,9 @@ class LessonRetrieveAPIView(generics.RetrieveAPIView):
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
+    """
+    Контроллер обновления конкретного урока
+    """
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = (
@@ -94,6 +117,9 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
+    """
+    Контроллер удаления конкретного урока
+    """
     queryset = Lesson.objects.all()
     permission_classes = (
         IsAuthenticated,

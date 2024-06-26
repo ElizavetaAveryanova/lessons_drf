@@ -8,6 +8,10 @@ from users.serializers import UserSerializer, PaymentSerializer
 
 
 class UserCreateAPIView(generics.CreateAPIView):
+    """
+    Контроллер регистрации пользователя.
+    """
+
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
@@ -19,26 +23,46 @@ class UserCreateAPIView(generics.CreateAPIView):
 
 
 class UserListAPIView(generics.ListAPIView):
+    """
+    Контроллер получения списка пользователей.
+    """
+
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
 
 
 class UserRetrieveAPIView(generics.RetrieveAPIView):
+    """
+    Контроллер получения информации о конкретном пользователе.
+    """
+
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
 
 class UserUpdateAPIView(generics.UpdateAPIView):
+    """
+    Контроллер обновления информации о конкретном пользователе.
+    """
+
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
 
 class UserDestroyAPIView(generics.DestroyAPIView):
+    """
+    Контроллер удаления информации о конкретном пользователе.
+    """
+
     queryset = User.objects.all()
 
 
 class PaymentListAPIView(generics.ListCreateAPIView):
+    """
+    Контроллер получения списка платежей пользователя.
+    """
+
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
 
@@ -58,13 +82,19 @@ class PaymentListAPIView(generics.ListCreateAPIView):
 
 
 class PaymentCreateAPIView(CreateAPIView):
-    """Контроллер создания платежа"""
+    """
+    Контроллер создания платежа
+    """
 
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
 
 
 class PaymentRetrieveAPIView(generics.RetrieveAPIView):
+    """
+    Контроллер получения информации о конкретном платеже.
+    """
+
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
 
