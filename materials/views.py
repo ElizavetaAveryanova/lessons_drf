@@ -136,6 +136,7 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
         IsAuthenticated,
         ~IsModer,
     )
+    queryset = Subscription.objects.all()
 
     def post(self, *args, **kwargs):
         """

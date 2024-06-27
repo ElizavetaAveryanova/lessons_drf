@@ -10,7 +10,10 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payments
-        fields = "__all__"
+        exclude = (
+            "tokens",
+            "payment_id",
+        )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,4 +25,22 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = "__all__"
+        fields = (
+            "id",
+            "email",
+            "phone_number",
+            "city",
+            "first_name",
+            "last_name",
+            "is_active",
+            "payments_history",
+            "last_login",
+        )
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    """Сериализатор для обновления профиля"""
+
+    class Meta:
+        model = User
+        fields = '__all__'
