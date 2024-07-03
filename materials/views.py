@@ -1,4 +1,5 @@
 from rest_framework import generics, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -7,7 +8,7 @@ from materials.models import Course, Lesson, Subscription
 from materials.paginations import CustomPagination
 from materials.serializers import CourseSerializer, LessonSerializer
 from users.permissions import IsModer, IsOwner
-
+from materials.tasks import send_information_about_update
 
 class CourseViewSet(viewsets.ModelViewSet):
     """
@@ -48,6 +49,20 @@ class CourseViewSet(viewsets.ModelViewSet):
         course = serializer.save()
         course.owner = self.request.user
         course.save()
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        subscribed_users = Subscription.objects.filter(course=instance).values_list('user__email', flat=True)
+
+        for user_email in subscribed_users:
+            send_information_about_update.delay(
+                subject=f"Обновление курса {instance.title}",
+                message=f"Курс {instance.title} был обновлен, проверьте на сайте",
+                email=user_email
+            )
+
+        return instance
+
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset()
@@ -157,3 +172,4 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
             message = "Подписка добавлена"
 
         return Response({"message": message})
+
