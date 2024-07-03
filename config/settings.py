@@ -163,6 +163,16 @@ CACHES = {
     }
 }
 
+# Celery-beat
+CELERY_BEAT_SCHEDULE = {
+    "check_activity": {
+        "task": "users.tasks.check_activity",
+        "schedule": timedelta(
+            days=30
+        ),  # Выполнение задачи "проверка активности" каждый месяц
+    },
+}
+
 # Email
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
 EMAIL_HOST = os.getenv('EMAIL_HOST')
