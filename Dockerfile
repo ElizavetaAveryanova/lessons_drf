@@ -15,9 +15,3 @@ RUN poetry config virtualenvs.create false && poetry install --no-dev --no-root
 
 # Копируем код приложения в контейнер
 COPY . /app/
-
-# Применение миграций
-RUN python manage.py migrate
-
-# Команда для запуска приложения при старте контейнера
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
