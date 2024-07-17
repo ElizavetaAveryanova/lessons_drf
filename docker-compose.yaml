@@ -67,7 +67,7 @@ services:
     networks:
       - lessons_drf_network
     tty: true
-    command: [ "sh", "-c", "celery -A config beat -l INFO && celery -A config worker -l info -P gevent" ]
+    command: [ "sh", "-c", "celery -A config beat -l INFO && celery -A config -l info -P gevent" ]
     env_file:
       - .env
     depends_on:
